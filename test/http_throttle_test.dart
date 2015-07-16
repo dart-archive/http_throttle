@@ -7,7 +7,7 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:http_throttle/http_throttle.dart';
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 
 void main() {
   test("makes requests until the limit is hit", () {
