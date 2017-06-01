@@ -54,6 +54,18 @@ void main() {
       expect(pendingResponses, hasLength(5));
     });
   });
+
+  test("releases resources when HTTP requests error out", () {
+    var pendingResponses = [];
+    var client = new ThrottleClient(10,
+        new MockClient((request) => new Future.error("oh no!")));
+
+    // Every request should throw. If we aren't properly releasing resources,
+    // all of these after the 10th will fail to complete.
+    for (var i = 0; i < 20; i++) {
+      expect(client.get('/'), throwsA("oh no!"));
+    }
+  });
 }
 
 /// Returns a [Future] that completes after pumping the event queue [times]

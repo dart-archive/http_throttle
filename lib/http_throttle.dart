@@ -25,23 +25,29 @@ class ThrottleClient extends BaseClient {
       : _pool = new Pool(maxActiveRequests),
         _inner = inner == null ? new Client() : inner;
 
-  Future<StreamedResponse> send(BaseRequest request) {
-    return _pool.request().then((resource) {
-      return _inner.send(request).then((response) {
-        var stream = response.stream.transform(
-            new StreamTransformer.fromHandlers(handleDone: (sink) {
-          resource.release();
-          sink.close();
-        }));
-        return new StreamedResponse(stream, response.statusCode,
-            contentLength: response.contentLength,
-            request: response.request,
-            headers: response.headers,
-            isRedirect: response.isRedirect,
-            persistentConnection: response.persistentConnection,
-            reasonPhrase: response.reasonPhrase);
-      });
-    });
+  Future<StreamedResponse> send(BaseRequest request) async {
+    var resource = await _pool.request();
+
+    StreamedResponse response;
+    try {
+      response = await _inner.send(request);
+    } catch (_) {
+      resource.release();
+      rethrow;
+    }
+
+    var stream = response.stream.transform(
+        new StreamTransformer.fromHandlers(handleDone: (sink) {
+      resource.release();
+      sink.close();
+    }));
+    return new StreamedResponse(stream, response.statusCode,
+        contentLength: response.contentLength,
+        request: response.request,
+        headers: response.headers,
+        isRedirect: response.isRedirect,
+        persistentConnection: response.persistentConnection,
+        reasonPhrase: response.reasonPhrase);
   }
 
   void close() => _inner.close();
