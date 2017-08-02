@@ -56,7 +56,6 @@ void main() {
   });
 
   test("releases resources when HTTP requests error out", () {
-    var pendingResponses = [];
     var client = new ThrottleClient(10,
         new MockClient((request) => new Future.error("oh no!")));
 
