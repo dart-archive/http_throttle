@@ -36,8 +36,8 @@ class ThrottleClient extends BaseClient {
       rethrow;
     }
 
-    var stream = response.stream.transform(
-        new StreamTransformer.fromHandlers(handleDone: (sink) {
+    var stream = response.stream
+        .transform(new StreamTransformer.fromHandlers(handleDone: (sink) {
       resource.release();
       sink.close();
     }));
