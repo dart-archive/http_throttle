@@ -1,5 +1,5 @@
 name: http_throttle
-version: 1.0.2-dev
+version: 1.0.2
 author: Dart Team <misc@dartlang.org>
 homepage: https://github.com/dart-lang/http_throttle
 description: HTTP client middleware that throttles requests.
