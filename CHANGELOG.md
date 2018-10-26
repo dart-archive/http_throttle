@@ -1,3 +1,7 @@
+## 1.0.4
+
+* Support the latest `pkg:http` release.
+
 ## 1.0.3
 
 * Set max SDK version to <3.0.0, and adjusted other dependencies.
